@@ -1,0 +1,57 @@
+{
+  "description": "well-defined butterfly or butterflies",
+  "found_patterns": [
+    {
+      "id": 1,
+      "params": {
+        "mu": 0.0710382993250619,
+        "sigma": 0.09575043198290069,
+        "kernel_radius": 21,
+        "kernel_peaks": [
+          1.0
+        ],
+        "kernel_beta": [
+          0.2691128794741608
+        ]
+      },
+      "explanation": "There are shapes that resemble butterflies in the center of the image.",
+      "image_path": "found_patterns/pattern_1.png",
+      "score": 0.20685433527734046
+    },
+    {
+      "id": 2,
+      "params": {
+        "mu": 0.0710382993250619,
+        "sigma": 0.09575043198290069,
+        "kernel_radius": 21,
+        "kernel_peaks": [
+          1.0
+        ],
+        "kernel_beta": [
+          0.2691128794741608
+        ]
+      },
+      "explanation": "There is a shape in the center that resembles a butterfly.",
+      "image_path": "found_patterns/pattern_2.png",
+      "score": 0.20667646010335214
+    },
+    {
+      "id": 3,
+      "params": {
+        "mu": 0.0710382993250619,
+        "sigma": 0.09575043198290069,
+        "kernel_radius": 21,
+        "kernel_peaks": [
+          1.0
+        ],
+        "kernel_beta": [
+          0.2691128794741608
+        ]
+      },
+      "explanation": "The pattern contains shapes that resemble butterflies.",
+      "image_path": "found_patterns/pattern_3.png",
+      "score": 0.20658202829956632
+    }
+  ],
+  "total_attempts": 16
+}
