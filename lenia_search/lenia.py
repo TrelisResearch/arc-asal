@@ -35,31 +35,37 @@ class Lenia:
 
         self.params = default_params if params is None else {**default_params, **params}
 
-        # Initialize grid with random seed pattern
+        # Initialize grid with seed pattern
         self.grid = np.zeros((size, size))
-        self._init_random_seed()
+        self._init_seed()
 
         # Build convolution kernel
         self.kernel = self._build_kernel()
 
-    def _init_random_seed(self, seed_size=24):
-        """Initialize with a random seed pattern in the center."""
+    def _init_seed(self, seed_type='disk', seed_radius=12):
+        """
+        Initialize with a fixed geometric seed pattern in the center.
+
+        Args:
+            seed_type: Type of seed ('disk', 'ring', 'gaussian')
+            seed_radius: Radius of the seed pattern
+        """
         center = self.size // 2
-        half = seed_size // 2
+        y, x = np.ogrid[:self.size, :self.size]
+        dist = np.sqrt((x - center)**2 + (y - center)**2)
 
-        # Create a smooth random blob with stronger initial values
-        np.random.seed(None)  # Random seed each time
-        blob = np.random.rand(seed_size, seed_size)
-
-        # Apply gaussian smoothing effect - tighter gaussian for more concentrated seed
-        x, y = np.meshgrid(np.linspace(-1, 1, seed_size), np.linspace(-1, 1, seed_size))
-        gaussian = np.exp(-(x**2 + y**2) / 0.3)
-        blob = blob * gaussian
-
-        # Normalize to have values close to 1 in center
-        blob = blob / blob.max() * 0.9
-
-        self.grid[center-half:center+half, center-half:center+half] = blob
+        if seed_type == 'disk':
+            # Solid disk with smooth edges
+            self.grid = np.clip(1.0 - dist / seed_radius, 0, 1)
+        elif seed_type == 'ring':
+            # Ring/annulus shape
+            inner = seed_radius * 0.5
+            outer = seed_radius
+            ring = np.exp(-((dist - (inner + outer) / 2) ** 2) / (seed_radius * 0.3) ** 2)
+            self.grid = ring
+        elif seed_type == 'gaussian':
+            # Gaussian blob
+            self.grid = np.exp(-(dist ** 2) / (2 * (seed_radius * 0.5) ** 2))
 
     def _build_kernel(self):
         """Build the convolution kernel."""
@@ -131,10 +137,10 @@ class Lenia:
         self.params.update(params)
         self.kernel = self._build_kernel()
 
-    def reset(self, seed_size=20):
-        """Reset grid with new random seed."""
+    def reset(self, seed_type='disk', seed_radius=12):
+        """Reset grid with a seed pattern."""
         self.grid = np.zeros((self.size, self.size))
-        self._init_random_seed(seed_size)
+        self._init_seed(seed_type, seed_radius)
 
 
 def visualize_lenia(lenia, steps=500, interval=50, save_path=None):

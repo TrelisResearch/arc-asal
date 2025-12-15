@@ -4,6 +4,7 @@ Lenia Pattern Search - Find cellular automaton patterns matching descriptions us
 
 Usage:
     python main.py search "circular blob pattern" --count 3 --attempts 50
+    python main.py evolve "butterfly pattern" --generations 100
     python main.py view
     python main.py replay 1
     python main.py demo
@@ -18,7 +19,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
 
-from lenia_search import Lenia, save_snapshot, PatternSearcher, check_pattern_match
+from lenia_search import Lenia, save_snapshot, PatternSearcher, check_pattern_match, run_evolution
 
 
 def cmd_search(args):
@@ -123,6 +124,17 @@ def cmd_replay(args):
     plt.show()
 
 
+def cmd_evolve(args):
+    """Run evolutionary pattern search."""
+    run_evolution(
+        description=args.description,
+        max_generations=args.generations,
+        population_size=args.population,
+        output_dir=args.output,
+        regen=args.regen_cands,
+    )
+
+
 def cmd_demo(args):
     """Run a quick demo of the Lenia simulation."""
     print("Running Lenia demo simulation...")
@@ -154,6 +166,8 @@ def main():
 Examples:
   %(prog)s search "circular blob pattern"
   %(prog)s search "worm-like elongated shape" --count 5 --attempts 100
+  %(prog)s evolve "butterfly pattern" --generations 100
+  %(prog)s evolve "spiral shape" --population 15 --generations 200
   %(prog)s view
   %(prog)s replay 1 --steps 1000
   %(prog)s demo
@@ -163,7 +177,7 @@ Examples:
     subparsers = parser.add_subparsers(dest='command', help='Available commands')
 
     # Search command
-    search_parser = subparsers.add_parser('search', help='Search for patterns matching a description')
+    search_parser = subparsers.add_parser('search', help='Search for patterns matching a description (random sampling)')
     search_parser.add_argument('description', type=str, help='Pattern description to search for')
     search_parser.add_argument('-c', '--count', type=int, default=3,
                                help='Number of matching patterns to find (default: 3)')
@@ -171,6 +185,18 @@ Examples:
                                help='Maximum search attempts (default: 50)')
     search_parser.add_argument('-o', '--output', type=str, default='found_patterns',
                                help='Output directory (default: found_patterns)')
+
+    # Evolve command
+    evolve_parser = subparsers.add_parser('evolve', help='Evolutionary search using pairwise VLM comparisons')
+    evolve_parser.add_argument('description', type=str, help='Pattern description to evolve towards')
+    evolve_parser.add_argument('-g', '--generations', type=int, default=100,
+                               help='Maximum generations (default: 100)')
+    evolve_parser.add_argument('-p', '--population', type=int, default=10,
+                               help='Population size (default: 10)')
+    evolve_parser.add_argument('-o', '--output', type=str, default='evolved_patterns',
+                               help='Output directory (default: evolved_patterns)')
+    evolve_parser.add_argument('--regen-cands', action='store_true',
+                               help='Regenerate candidates from scratch (ignore existing)')
 
     # View command
     view_parser = subparsers.add_parser('view', help='View saved patterns')
@@ -196,6 +222,8 @@ Examples:
 
     if args.command == 'search':
         cmd_search(args)
+    elif args.command == 'evolve':
+        cmd_evolve(args)
     elif args.command == 'view':
         cmd_view(args)
     elif args.command == 'replay':
