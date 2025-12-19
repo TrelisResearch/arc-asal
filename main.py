@@ -2,12 +2,16 @@
 """
 Lenia Pattern Search - Find cellular automaton patterns matching descriptions using VLM
 
+Setup:
+    Create a .env file with your Gemini API key:
+        GEMINI_API_KEY=your_api_key_here
+
 Usage:
-    python main.py search "circular blob pattern" --count 3 --attempts 50
-    python main.py evolve "butterfly pattern" --generations 100
-    python main.py view
-    python main.py replay 1
-    python main.py demo
+    uv run main.py search "circular blob pattern" --count 3 --attempts 5
+    uv run main.py evolve "butterfly pattern" --generations 10
+    uv run main.py view
+    uv run main.py replay 1
+    uv run main.py demo
 """
 
 import argparse
@@ -60,7 +64,7 @@ def cmd_view(args):
 
     if not results_file.exists():
         print(f"No results found in {args.output}")
-        print("Run a search first: python main.py search 'your description'")
+        print("Run a search first: uv run main.py search 'your description'")
         return
 
     with open(results_file) as f:
