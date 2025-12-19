@@ -1,0 +1,17 @@
+{
+  "id": 1,
+  "params": {
+    "mu": 0.06864466970711666,
+    "sigma": 0.08373885088436125,
+    "kernel_radius": 9,
+    "kernel_peaks": [
+      1.0
+    ],
+    "kernel_beta": [
+      0.8408272635480161
+    ]
+  },
+  "explanation": "The image consists of numerous small blobs arranged in a pattern, and the most prominent feature is the large, distinct circular boundary in the center, which organizes and distorts the surrounding blobs.",
+  "image_path": "found_patterns/pattern_1.png",
+  "score": 0.18496710071112157
+}
